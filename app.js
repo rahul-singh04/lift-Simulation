@@ -74,8 +74,7 @@ const renderUI = () => {
 
     const upButton = document.createElement("button");
     upButton.innerText = "Up";
-    upButton.style.display =
-      floor === getNumOfFloors() && getNumOfFloors === 1 ? "none" : "block";
+    upButton.style.display = floor === getNumOfFloors() ? "none" : "block";
     upButton.addEventListener("click", () => callLift(floor, "up"));
     floorContainer.appendChild(upButton);
 
@@ -148,12 +147,13 @@ const callLift = (floor, direction) => {
   if (availableLiftIndex !== -1) {
     moveLift(availableLiftIndex, floor);
   } else {
-    for (let i = 0; i < liftState.length; i++) {
-      if (liftState[i].currentFloor === floor) {
-        toggleLiftState(i);
-        break;
-      }
-    }
+    console.log("all lifts busy");
+    // for (let i = 0; i < liftState.length; i++) {
+    //   if (liftState[i].currentFloor === floor) {
+    //     toggleLiftState(i);
+    //     break;
+    //   }
+    // }
   }
 };
 
