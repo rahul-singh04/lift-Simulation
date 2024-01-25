@@ -71,19 +71,22 @@ const renderUI = () => {
   for (let floor = getNumOfFloors(); floor >= 1; floor--) {
     const floorContainer = document.createElement("div");
     floorContainer.className = "floor-container";
+    const buttonContainer = document.createElement("div");
+    buttonContainer.className = "button-container";
 
     const upButton = document.createElement("button");
     upButton.innerText = "Up";
     upButton.style.display = floor === getNumOfFloors() ? "none" : "block";
     upButton.addEventListener("click", () => callLift(floor));
-    floorContainer.appendChild(upButton);
+    buttonContainer.appendChild(upButton);
 
     const downButton = document.createElement("button");
     downButton.innerText = "Down";
     downButton.style.display = 1 === floor ? "none" : "block";
     downButton.style.backgroundColor = "brown";
     downButton.addEventListener("click", () => callLift(floor));
-    floorContainer.appendChild(downButton);
+    buttonContainer.appendChild(downButton);
+    floorContainer.appendChild(buttonContainer);
 
     const line = document.createElement("div");
     line.className = "floor-line";
@@ -100,6 +103,9 @@ const renderUI = () => {
   // Create lifts
 
   let horizontalPosition = 150;
+  if (window.innerWidth <= 768) {
+    horizontalPosition = 100;
+  }
 
   for (let liftIndex = 0; liftIndex < getNumOfLifts(); liftIndex++) {
     const liftContainer = document.createElement("div");
@@ -116,7 +122,11 @@ const renderUI = () => {
 
     liftContainer.appendChild(lift);
     appContainer.appendChild(liftContainer);
-    horizontalPosition += 50;
+    if (window.innerWidth <= 768) {
+      horizontalPosition += 35; // Change this value for smaller screens
+    } else {
+      horizontalPosition += 60; // Default value for larger screens
+    }
   }
 };
 

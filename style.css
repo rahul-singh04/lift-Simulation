@@ -100,4 +100,28 @@ button {
     width: 30px; /* Adjust the width for smaller screens */
     height: 50px; /* Adjust the height for smaller screens */
   }
+
+  #app {
+    width: 95%;
+    margin: 1rem;
+  }
+  .button-container {
+    gap: 0.2rem;
+    width: 8rem;
+  }
+
+  .floor-label {
+    width: 5rem;
+    padding: 0 7px;
+    font-size: 12px;
+  }
+  .floor-container {
+    gap: 0.5rem;
+  }
+}
+
+.button-container {
+  display: flex;
+  gap: 0.5rem;
+  width: 8rem;
 }
