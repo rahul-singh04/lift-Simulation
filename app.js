@@ -75,14 +75,14 @@ const renderUI = () => {
     const upButton = document.createElement("button");
     upButton.innerText = "Up";
     upButton.style.display = floor === getNumOfFloors() ? "none" : "block";
-    upButton.addEventListener("click", () => callLift(floor, "up"));
+    upButton.addEventListener("click", () => callLift(floor));
     floorContainer.appendChild(upButton);
 
     const downButton = document.createElement("button");
     downButton.innerText = "Down";
     downButton.style.display = 1 === floor ? "none" : "block";
     downButton.style.backgroundColor = "brown";
-    downButton.addEventListener("click", () => callLift(floor, "down"));
+    downButton.addEventListener("click", () => callLift(floor));
     floorContainer.appendChild(downButton);
 
     const line = document.createElement("div");
@@ -112,7 +112,7 @@ const renderUI = () => {
 
     liftContainer.style.left = `${horizontalPosition}px`;
 
-    liftContainer.addEventListener("click", () => toggleLiftState(liftIndex));
+    // liftContainer.addEventListener("click", () => toggleLiftState(liftIndex));
 
     liftContainer.appendChild(lift);
     appContainer.appendChild(liftContainer);
@@ -139,8 +139,9 @@ const toggleLiftState = (liftIndex) => {
 // Milestone 2: Lift mechanics
 
 // Handling lift calls
-const callLift = (floor, direction) => {
+const callLift = (floor) => {
   const availableLiftIndex = findAvailableLift(floor);
+  console.log(availableLiftIndex + "here");
   if (availableLiftIndex === null) {
     return;
   }
@@ -148,20 +149,18 @@ const callLift = (floor, direction) => {
     moveLift(availableLiftIndex, floor);
   } else {
     console.log("all lifts busy");
-    // for (let i = 0; i < liftState.length; i++) {
-    //   if (liftState[i].currentFloor === floor) {
-    //     toggleLiftState(i);
-    //     break;
-    //   }
-    // }
+    setTimeout(() => {
+      callLift(floor);
+    }, 1000);
   }
 };
 
 const findAvailableLift = (floor) => {
   for (let i = 0; i < getNumOfLifts(); i++) {
-    if (liftState[i].currentFloor === floor) {
+    if (liftState[i].currentFloor === floor && liftState[i].isOpen === false) {
       //selecting a lift which is not moving and is  present on that floor
       toggleLiftState(i);
+      console.log("already lift present");
       return null;
     }
   }
