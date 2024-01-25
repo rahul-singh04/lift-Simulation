@@ -116,7 +116,7 @@ const renderUI = () => {
 
     liftContainer.appendChild(lift);
     appContainer.appendChild(liftContainer);
-    horizontalPosition += 60;
+    horizontalPosition += 50;
   }
 };
 
