@@ -18,7 +18,7 @@ const initializeSimulation = () => {
   updateNumOfFloors(parseFloat(floorsInput));
   updateNumOfLifts(parseFloat(liftsInput));
 
-  if (!Number.isInteger(getNumOfFloors()) || getNumOfFloors() <= 0) {
+  if (!Number.isInteger(getNumOfFloors()) || getNumOfFloors() < 0) {
     showErrorMessage(
       "Please enter a valid positive integer for the number of floors. Decimal values are not allowed.",
       "error-message-floors"
@@ -26,7 +26,7 @@ const initializeSimulation = () => {
     return;
   }
 
-  if (!Number.isInteger(getNumOfLifts()) || getNumOfLifts() <= 0) {
+  if (!Number.isInteger(getNumOfLifts()) || getNumOfLifts() < 0) {
     showErrorMessage(
       "Please enter a valid positive integer for the number of lifts. Decimal values are not allowed.",
       "error-message-lifts"
