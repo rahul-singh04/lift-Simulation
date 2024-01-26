@@ -75,16 +75,18 @@ const renderUI = () => {
     buttonContainer.className = "button-container";
 
     const upButton = document.createElement("button");
+    upButton.className = `${floor}`;
     upButton.innerText = "Up";
     upButton.style.display = floor === getNumOfFloors() ? "none" : "block";
-    upButton.addEventListener("click", () => callLift(floor));
+    upButton.addEventListener("click", () => throttledCallLift(floor));
     buttonContainer.appendChild(upButton);
 
     const downButton = document.createElement("button");
+    downButton.className = `${floor}`;
     downButton.innerText = "Down";
     downButton.style.display = 1 === floor ? "none" : "block";
     downButton.style.backgroundColor = "brown";
-    downButton.addEventListener("click", () => callLift(floor));
+    downButton.addEventListener("click", () => throttledCallLift(floor));
     buttonContainer.appendChild(downButton);
     floorContainer.appendChild(buttonContainer);
 
@@ -118,8 +120,6 @@ const renderUI = () => {
 
     liftContainer.style.left = `${horizontalPosition}px`;
 
-    // liftContainer.addEventListener("click", () => toggleLiftState(liftIndex));
-
     liftContainer.appendChild(lift);
     appContainer.appendChild(liftContainer);
     if (window.innerWidth <= 768) {
@@ -135,15 +135,15 @@ const toggleLiftState = (liftIndex) => {
   const liftElement = document.getElementsByClassName(`lift ${liftIndex}`);
 
   liftElement[0].style.transform = "rotateY(0deg)";
-  liftElement[0].style.transition = "transform 2.5s";
+  liftElement[0].style.transition = "transform 2s";
   setTimeout(() => {
     liftElement[0].style.transform = "rotateY(90deg)";
-    liftElement[0].style.transition = "transform 2.5s";
+    liftElement[0].style.transition = "transform 2s";
   }, 2500);
 
   setTimeout(() => {
     liftState[liftIndex].isOpen = !liftState[liftIndex].isOpen;
-  }, 3000);
+  }, 4000);
 };
 
 // Milestone 2: Lift mechanics
@@ -151,24 +151,42 @@ const toggleLiftState = (liftIndex) => {
 // Handling lift calls
 const callLift = (floor) => {
   const availableLiftIndex = findAvailableLift(floor);
-  console.log(availableLiftIndex + "here");
+  //   console.log(availableLiftIndex + "here");
   if (availableLiftIndex === null) {
     return;
   }
   if (availableLiftIndex !== -1) {
     moveLift(availableLiftIndex, floor);
   } else {
-    console.log("all lifts busy");
+    // console.log("all lifts busy");
     setTimeout(() => {
       callLift(floor);
     }, 1000);
   }
 };
 
+const throttledCallLift = throttle(callLift);
+
+function throttle(fn) {
+  let floorObj = {};
+  return function (...args) {
+    if (!floorObj[args[0]]) {
+      fn(...args);
+      floorObj[args[0]] = true;
+    }
+    const timeout = setTimeout(() => {
+      delete floorObj[args[0]];
+    }, 2000);
+  };
+}
+
 const findAvailableLift = (floor) => {
   for (let i = 0; i < getNumOfLifts(); i++) {
     if (liftState[i].currentFloor === floor && liftState[i].isOpen === false) {
       //selecting a lift which is not moving and is  present on that floor
+      if (liftState[i].isMoving) {
+        return null;
+      }
       toggleLiftState(i);
       console.log("already lift present");
       return null;
@@ -189,7 +207,8 @@ const findAvailableLift = (floor) => {
 };
 
 const moveLift = (liftIndex, destination) => {
-  console.log(liftIndex, destination);
+  //   console.log(liftIndex, destination);
+
   liftState[liftIndex].destination = destination; //setting target lifts destination
   liftState[liftIndex].isMoving = true; //setting it property moving to true
   let currentFloorOfLift = liftState[liftIndex].currentFloor;
@@ -201,8 +220,8 @@ const moveLift = (liftIndex, destination) => {
     Math.abs(destination - currentFloorOfLift) * 2
   }s linear`;
 
+  liftState[liftIndex].currentFloor = destination;
   setTimeout(() => {
-    liftState[liftIndex].currentFloor = destination;
     liftState[liftIndex].isMoving = false;
     toggleLiftState(liftIndex);
   }, Math.abs(destination - currentFloorOfLift) * 2 * 1000);
